@@ -39,15 +39,16 @@ def ponderify_single_color(im: Image.Image, local_ponder_mass) -> Image.Image:
             pixel = im.getpixel((min(x+offset, width-1), min(y+offset, height-1)))
             average = pixel/255
             resized_ponder = ImageOps.fit(ponder, set_size(average, local_ponder_mass), Image.Resampling.NEAREST)
-            out.paste(resized_ponder, get_resized_pos(x, y, resized_ponder.size), resized_ponder)
+            out.paste(resized_ponder, get_resized_pos(x, y, resized_ponder.size, local_ponder_mass), resized_ponder)
     return out
 
 def set_size(average: float, local_ponder_mass: int = ponder_mass) -> tuple[int,int]:
     size = max(round(local_ponder_mass*average), 1)
     return size, size
 
-def get_resized_pos(x :int, y: int, size: tuple) -> tuple[int, int, int, int]:
-    return floor(x+15-size[0]/2), floor(y+15-size[1]/2), floor(x+15+size[0]/2), floor(y+15+size[1]/2)
+def get_resized_pos(x :int, y: int, size: tuple, local_ponder_mass: int = ponder_mass) -> tuple[int, int, int, int]:
+    offset = local_ponder_mass/2
+    return floor(x+offset-size[0]/2), floor(y+offset-size[1]/2), floor(x+offset+size[0]/2), floor(y+offset+size[1]/2)
 
 ponderify("bean.jpg")
 ponderify_rgb("bean.jpg")
